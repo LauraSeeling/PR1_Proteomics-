@@ -1,0 +1,304 @@
+---
+title: "27200 · Multi-omics integration with MOFA2"
+subtitle: "Exercise A — a guided MOFA run on MetaCardis"
+author: "Group: _____  (names: _____ )"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+```{r knitr-options, include = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 9, fig.height = 5)
+```
+
+# How to use this workbook {-}
+
+* Run the grey code chunks **in order** (▶ or Ctrl/Cmd + Shift + Enter).
+* You only edit lines marked **`# DECIDE`**. Everything else is already written.
+* Questions marked **Q** are answered in the text directly below them. They become your notes
+  for Exercise B and the one-minute paper, so write in full sentences.
+* Training a model takes ~10 s. The very first training on a computer also downloads Python
+  and sets up an environment for MOFA (about 5 min, needs internet). Re-running with identical
+  settings loads the saved model from `models/`.
+* All preprocessing happens in `27200_mofa_functions.R` → `build_views()`. Open it next to this
+  file: **preprocessing is part of the model**.
+
+| Time      | Activity                                               |
+|-----------|--------------------------------------------------------|
+| 0-10 min  | §1 Know the study design                               |
+| 10-25 min | §2 Decide the preprocessing and model settings         |
+| 25-30 min | §3-4 Build the views and train                         |
+| 30-55 min | §5-8 Interpret: variance explained, covariates, weights|
+| 55-60 min | §9 Save your settings for Exercise B                   |
+
+<details><summary>**Before the session: installation (click to expand)**</summary>
+
+```{r Package-installation, eval = FALSE}
+install.packages(c("BiocManager", "ggplot2", "patchwork", "rmarkdown", "ggpubr"))
+BiocManager::install(c("MOFA2", "mixOmics"), update = FALSE)
+```
+</details>
+
+# Setup
+
+```{r setup}
+# set the working directory to the folder where you extracted the files
+source("27200_mofa_functions.R")   # loads MOFA2 + ggplot2 and the helper functions
+mc <- load_metacardis("data")       # one list: $metadata, $drugs, $microbiome, $serum, $taxonomy
+```
+
+The data are an extract from the MetaCardis cohort (Vieira-Silva *et al.* 2020 *Nature*;
+Forslund *et al.* 2021 *Nature*; Fromentin *et al.* 2022 *Nat Med*): 960 adults from France,
+Germany and Denmark with clinical markers, medication use, faecal metagenomics and serum
+metabolomics, all measured on the same individuals.
+
+The following phenotypes are included in the dataset:
+- Coronary Artery Disease (CAD)
+- Type 2 diabetes without CAD (T2D)
+- Metabolic Syndrome without T2D or CAD (MetS)
+- Obesity (BMI ≥ 35 kg/m²) without diabetes or coronary artery disease
+- Controls exempt of CAD, T2D, MS and with BMI<25 kg/m²
+
+# Know your design before you model it
+
+MOFA is unsupervised: it never sees phenotype, country or medication. So before modelling,
+find out which of these variables are entangled with each other.
+
+```{r design}
+# Who was recruited where? (phenotype x country)
+with(mc$metadata, table(phenotype, Nationality))
+
+# Medication use (% of participants) within each phenotype
+sapply(mc$drugs[, c("Metformin", "Insulin", "Statin", "Aspirine", "Beta.blockers", "PPI")],
+       function(x) round(100 * tapply(x == "Yes", mc$metadata$phenotype, mean)))
+```
+
+**Q1.** Germany contributes no CAD patients, and Denmark no obesity patients. Suppose a
+factor separates CAD patients from everyone else. Which other variable does it then
+automatically separate as well?
+
+> *Answer:*
+
+**Q2.** Which drugs are almost exclusive to one phenotype? Why does this make it difficult to
+call a factor a "disease factor"?
+
+> *Answer:*
+
+# Decide how to preprocess and model the data
+
+Each setting below is a modelling assumption. Hints in the comments describe the data.
+Change the settings you disagree with and justify **every** choice in the decision log.
+
+```{r settings}
+settings <- list(
+  # ---- Which views to integrate -----------------------------------------------------------
+  # You can choose to leave out a view in the analysis
+  views = c("clinical", "microbiome", "drugs", "metabolome"),                # DECIDE
+
+  # ---- Clinical view: 8 markers. Age, sex and country are NOT data here; we keep them as
+  #      covariates to interpret factors afterwards (MOFA is unsupervised).
+  clinical_vars  = c("BMI", "Waist.circum", "triglycerides", "adiponectin",
+                     "hsCRP", "HbA1c", "SystoBP", "DiastBP"),
+  
+  # Select which clinical variables to log-transform
+  # Skewness: hsCRP 8.1, triglycerides 2.8, HbA1c 2.5, adiponectin 1.8, BMI 1.6, BP < 0.4
+  clinical_log   = c("triglycerides", "adiponectin", "hsCRP", "HbA1c"),      # DECIDE
+  
+  # Choose to scale all (TRUE) or no (FALSE) clinical variables using z-score 
+  # SDs: systolic BP 17 mmHg, waist 18 cm, triglycerides 0.8 mmol/L, HbA1c 1.0 %
+  clinical_scale = TRUE,                                                     # DECIDE
+
+  # ---- Microbiome view: 705 taxa, relative abundances (rows sum to 1), 88 % zeros.
+  # Taxa detected in >= 5 % / 10 % / 20 % / 30 % of samples: 233 / 184 / 136 / 102
+  mb_min_prevalence = 0.10,                                                  # DECIDE
+  mb_transform      = "clr",     # "clr", "log10" or "none"                  # DECIDE
+  # Value to replace all 0 values with
+  mb_pseudocount    = 1e-6,      # smallest non-zero abundance is 1.6e-6     # DECIDE
+
+  # ---- Drug view: 24 Yes/No classes. Three are unions of the other 21 classes
+  #      (Antidiabetics, Lipid.lowering.drugs, Anti.hypertensive.drugs).
+  #      (e.g. Antidiabetics = Metformin OR Insulin OR DPP-IV inhibitors OR GLP-1 agonists).
+  # Only include drugs with a prevalence (%) above this threshold in the dataset
+  drug_min_prevalence = 0.02,                                                # DECIDE
+  # Choose to drop (TRUE) or exclude (FALSE) union classifiers
+  drug_drop_unions  = TRUE,                                                  # DECIDE
+  # Choose to model drug use by the Bernoulli or gaussian distribution
+  drug_likelihood     = "bernoulli",   # "bernoulli" or "gaussian"           # DECIDE
+
+  # ---- Metabolome view: 1,446 log-transformed serum metabolites, 17 samples without serum.
+  # The panel also measures the drugs themselves: metformin is the single most variable
+  # metabolite; a range of drugs and drug metabolites atorvastatin, metoprolol, salicylate (aspirin), PPIs etc. are also present.
+  met_n_features       = 300,   # keep the N most variable metabolites       # DECIDE
+  met_drop_xenobiotics = TRUE,  # drop the measured drugs + drug metabolites # DECIDE
+  # Choose to scale all (TRUE) or no (FALSE) metabolites using z-score
+  met_scale            = TRUE,  # z-score each metabolite                    # DECIDE
+
+  # ---- MOFA model and training ------------------------------------------------------------
+  num_factors      = 10,        # Max number of factores in the analysis;    # DECIDE
+                                # NB: unused factors are switched off
+  scale_views      = TRUE,      # divide each view by its overall SD         # DECIDE
+                                # (one number per view; does not offset views that have more features)
+  convergence_mode = "fast",
+  seed             = 0501 # Teacher's birthday
+)
+```
+
+**Decision log.** Fill in one row per decision (*CHOICE*, *WHY*, *WHAT COULD GO WRONG*) (you will need this for the one-minute paper).
+
+| Setting | Our choice | Why | What could go wrong |
+|---------|------------|-----|---------------------|
+| `views` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+| `clinical_log`, `clinical_scale` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+| `mb_min_prevalence`, `mb_transform`, `mb_pseudocount` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+| `drug_drop_unions`, `drug_likelihood` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+| `met_n_features`, `met_drop_xenobiotics`, `met_scale` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+| `num_factors`, `scale_views` | *CHOICE* | *WHY* | *WHAT COULD GO WRONG* |
+
+# Build the views and look at them
+
+```{r build-views}
+views <- build_views(mc, settings)   # list of matrices, rows = samples, columns = features
+
+# Features per view and % missing values
+data.frame(features    = sapply(views, ncol),
+           missing_pct = sapply(views, function(x) round(100 * mean(is.na(x)), 1)))
+```
+
+```{r view-distributions, fig.height = 3}
+# Distribution of all values in each view after preprocessing.
+# A Gaussian likelihood assumes roughly symmetric, unimodal residuals.
+Map(function(x, nm) data.frame(view = nm, value = as.vector(x)), views, names(views)) |>
+  do.call(what = rbind) |>
+  ggplot(aes(value)) +
+  geom_histogram(bins = 60) +
+  facet_wrap(~ view, scales = "free", nrow = 1) +
+  theme_minimal()
+```
+
+```{r data-overview, fig.height = 3}
+# Which samples have which views aka. how complete is the data? (grey = missing)
+plot_data_overview(create_mofa(lapply(views, t)))
+```
+
+**Q3.** Which view has samples without any data? What does MOFA do with them, and what would
+PCA on the concatenated data have to do instead?
+
+> *Answer:*
+
+**Q4.** Compare the number of features per view. Which view could dominate the factors simply
+because it is large, and which settings above control this?
+
+> *Answer:*
+
+# Train the model
+
+MOFA prints warnings during training. **Read them** (they are shown below the chunk).
+
+```{r train, results = "hide", warning = TRUE}
+model <- fit_mofa(views, settings)
+```
+
+# Where does the model explain variance?
+
+```{r r2-total, fig.height = 3}
+plot_variance_explained(model, plot_total = TRUE)[[2]]   # total R² per view
+```
+
+```{r r2-per-factor}
+plot_variance_explained(model, x = "view", y = "factor") # R² per factor and view
+```
+
+> **Note.** For a Bernoulli view, MOFA computes R² on a Gaussian approximation of the 0/1
+> data ("pseudo-data"). The drug R² is therefore not on the same scale as the other views.
+
+**Q5.** Which factors are *shared* (≥ 2 views) and which are *view-specific*? A factor
+explaining 10 % of the clinical view and a factor explaining 3 % of the metabolome: which is
+"more important"? Argue both sides.
+
+> *Answer:*
+
+# Sanity checks
+
+```{r factor-correlation, fig.height = 4.5, fig.width = 5}
+# Factors should be close to uncorrelated. Strong correlations suggest too many factors
+# or poor convergence.
+plot_factor_cor(model)
+```
+
+```{r global-levels}
+# MOFA may warn that a factor tracks the average level of a view. Check two "global"
+# sample properties: the mean of all 1,446 serum metabolites and the number of drugs taken.
+cor(get_Z(model),
+    cbind(mean_metabolite_level = rowMeans(mc$serum, na.rm = TRUE),
+          n_drugs               = rowSums(mc$drugs == "Yes"))[rownames(get_Z(model)), ],
+    use = "pairwise.complete.obs") |>
+  round(2)
+```
+
+**Q6.** Is there a factor that mostly tracks a global level? Name one biological and one
+technical process that could shift *all* serum metabolites of a sample up or down together.
+
+> *Answer:*
+
+# What are the factors associated with?
+
+```{r covariate-association, fig.height = 5.5}
+covariates <- c("Age", "Gender", "Nationality", "Antibiotics", "phenotype",
+                "Metformin", "Statin", "PPI")                                  # DECIDE
+# all available: names(samples_metadata(model))
+
+factor_covariates(model, covariates) |> plot_covariate_r2("Factor ~ covariate")
+```
+
+```{r factor-plots, fig.height = 4}
+plot_factor(model, factors = 1:3, color_by = "phenotype",                     # DECIDE: factors
+            dodge = TRUE, add_violin = TRUE, dot_size = 0.6)
+plot_factors(model, factors = c(1, 2), color_by = "Nationality", dot_size = 1) # DECIDE: factors
+```
+
+**Q7.** Which factor is most strongly associated with phenotype? Is the same factor also
+associated with country or a drug? Give **two non-biological** explanations for the
+phenotype association. (Hint: how are T2D, obesity and metabolic syndrome *diagnosed*, and
+which view contains those measurements?)
+
+> *Answer:*
+
+**Q8.** With n = 960, an R² of 0.01 is already "significant". What R² would you consider
+relevant here, and why?
+
+> *Answer:*
+
+# What drives a factor?
+
+```{r top-weights, fig.height = 8}
+factor_of_interest <- 1                                                        # DECIDE
+
+names(views) |>
+  lapply(function(v) plot_top_weights(model, view = v, factors = factor_of_interest, nfeatures = 10) +
+               ggtitle(v)) |>
+  patchwork::wrap_plots(ncol = 2)
+```
+
+```{r data-scatter, fig.height = 6}
+# Do the data support the weights? Top-4 features of one view against the factor values.
+plot_data_scatter(model, view = "clinical", factor = factor_of_interest,      # DECIDE: view
+                  features = 4, color_by = "phenotype", add_lm = TRUE)
+```
+
+> **Remember.** Weights are *relative* (scaled to −1…1 within a factor) and the sign of a
+> factor is arbitrary (a re-run can flip it). Weights are not effect sizes.
+
+**Q9.** Describe your factor in **one sentence**, using only what the model shows (views,
+top features, covariates). Then list what additional evidence you would need before calling
+it a "cardiometabolic disease axis".
+
+> *Answer:*
+
+# Save your settings for Exercise B
+
+```{r save-settings}
+saveRDS(settings, "models/settings_exerciseA.rds")   # Exercise B starts from these
+```
