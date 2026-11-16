@@ -1,0 +1,511 @@
+---
+title: "Part A — From a protein table to a list of changing proteins"
+subtitle: "Human left ventricle: `r params$case` vs `r params$control` (`r params$sex`)"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+params:
+  file: "PR1_heart_valve_disease.xlsx"
+  sex: "female"                       # "female" or "male"
+  case: "aortic stenosis"             # or "mitral regurgitation"
+  control: "control (donor heart)"
+  min_valid: 0.6667                   # fraction of samples per group that must have a value
+  normalize: true                     # median normalization on top of MaxLFQ (true/false)
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 10, fig.height = 4)
+```
+
+This follows Part A of *Week 7 — Exercise 2* (27200 Data-driven Bioengineering), translated from
+Python to R and applied to the heart valve disease data set (Nordmeyer et al. 2023, PRIDE PXD023800).
+
+**Design.** The 75 left-ventricle biopsies come from three groups (aortic stenosis, mitral
+regurgitation, donor-heart controls), each with women and men. Patients of the **same sex and the same
+disease group** are treated as **biological replicates**. This report compares one disease group with
+the controls of the same sex. Sections A1–A8 walk through one comparison step by step; section A9
+then runs the same pipeline for **all comparisons** (aortic stenosis vs control, mitral regurgitation
+vs control, aortic stenosis vs mitral regurgitation), separately for women and men.
+To change the step-by-step comparison, change the `params` at the top
+(e.g. `sex: "male"` or `case: "mitral regurgitation"`), or knit from the console:
+
+```r
+rmarkdown::render("PartA_heart_valve_proteomics.Rmd",
+                  params = list(sex = "male", case = "mitral regurgitation"))
+```
+
+**What differs from the benchmark.** In the notebook the true answer was known (human proteins
+unchanged, E. coli up 3-fold). Here it is not, so the "check against the truth" step (A8) becomes
+"what did we find, and how much does it depend on our choices?".
+
+Only base R and `readxl` are used, so the code reads like the Python version step by step.
+
+```{r load}
+library(readxl)
+
+samples <- read_excel(params$file, sheet = "samples")
+pg      <- read_excel(params$file, sheet = "proteinGroups", guess_max = 20000)  # one row per protein group
+dim(pg)
+
+# Replicate groups = disease group x sex
+table(samples$group, samples$sex)
+```
+
+```{r groups}
+# The samples (LFQ columns) of the two groups we compare
+ctrl_cols <- samples$column[samples$group == params$control & samples$sex == params$sex]
+case_cols <- samples$column[samples$group == params$case    & samples$sex == params$sex]
+lfq       <- c(ctrl_cols, case_cols)
+short     <- sub("LFQ intensity ", "", lfq)                 # e.g. "AS_03_F"
+is_case   <- lfq %in% case_cols
+grp_col   <- ifelse(is_case, "#D62728", "#1F77B4")         # red = disease, blue = control
+
+cat(sprintf("control: %d %s samples   |   case: %d %s samples\n",
+            length(ctrl_cols), params$sex, length(case_cols), params$sex))
+```
+
+The table is MaxQuant output with the columns you need:
+
+| Column | Meaning |
+|---|---|
+| `Protein IDs`, `Majority protein IDs` | proteins that share the peptides of this row (a *protein group*) |
+| `Gene names` | gene name(s) of the group |
+| `Reverse` | `+` if the group is a decoy |
+| `Potential contaminant` | `+` for common contaminants (keratin, trypsin, serum proteins, …) |
+| `Only identified by site` | `+` if seen only through a modified peptide |
+| `LFQ intensity <sample>` | label-free quantification value per sample; 0 means not measured |
+
+# A1 · Filter
+
+```{r filter}
+is_plus <- function(x) !is.na(x) & x == "+"
+
+keep <- !is_plus(pg$Reverse) & !is_plus(pg$`Potential contaminant`) &
+        !is_plus(pg$`Only identified by site`)
+
+cat(sprintf("removed: %d decoys, %d contaminants, %d only-by-site\n",
+            sum(is_plus(pg$Reverse)), sum(is_plus(pg$`Potential contaminant`)),
+            sum(is_plus(pg$`Only identified by site`))))
+
+d <- pg[keep, ]
+cat(sprintf("kept %d protein groups\n", nrow(d)))
+```
+
+# A2 · Log-transform
+
+Intensities span several orders of magnitude and are skewed. On the log scale they are roughly normal,
+and a **fold change becomes a difference** (a doubling is +1, a halving −1 in log2).
+
+```{r log}
+raw <- as.matrix(d[, lfq])
+raw[raw == 0] <- NA                    # 0 means "not measured", not "zero protein"
+X <- log2(raw)
+colnames(X) <- lfq
+
+par(mfrow = c(1, 2))
+hist(raw[, 1], breaks = 60, main = "raw intensity", xlab = "intensity", col = "grey70", border = "white")
+hist(X[, 1],   breaks = 60, main = "log2 intensity", xlab = "log2 intensity", col = "grey70", border = "white")
+```
+
+# A3 · Missing values
+
+Not every protein is measured in every sample. Look at *which* ones are missing.
+
+```{r missing, fig.height = 4.5}
+cat("missing values per sample:\n")
+print(colSums(is.na(X)))
+
+# Split proteins into ten groups by average intensity, and ask how often each group is missing
+mean_int     <- rowMeans(X, na.rm = TRUE)
+frac_missing <- rowMeans(is.na(X))
+ok  <- is.finite(mean_int)                                   # proteins seen in at least one sample
+dec <- cut(mean_int[ok], quantile(mean_int[ok], 0:10 / 10), include.lowest = TRUE, labels = 1:10)
+
+par(mfrow = c(1, 1))
+barplot(tapply(frac_missing[ok], dec, mean), col = "#1F77B4",
+        xlab = "average log2 intensity (deciles, low to high)", ylab = "fraction missing",
+        main = "Missing values are mostly low-abundance proteins")
+```
+
+Missing values are concentrated among the weakest proteins: most are missing because the protein was
+**below the detection limit**, not at random.
+
+A protein measured in only a few patients cannot be tested fairly. In the notebook (3 replicates)
+the rule was *at least 2 of 3 values in both conditions*; with larger groups we use the same
+proportion: **at least two thirds of the samples in both groups**.
+
+```{r valid}
+n_min_ctrl <- ceiling(round(params$min_valid * length(ctrl_cols), 6))
+n_min_case <- ceiling(round(params$min_valid * length(case_cols), 6))
+
+valid <- rowSums(!is.na(X[, ctrl_cols])) >= n_min_ctrl &
+         rowSums(!is.na(X[, case_cols])) >= n_min_case
+X <- X[valid, ]
+d <- d[valid, ]
+
+cat(sprintf("required: >= %d of %d controls and >= %d of %d cases\n",
+            n_min_ctrl, length(ctrl_cols), n_min_case, length(case_cols)))
+cat(sprintf("%d proteins left, %d missing values remain (%.1f%%)\n",
+            nrow(X), sum(is.na(X)), 100 * mean(is.na(X))))
+```
+
+# A4 · Normalize — and check the assumption
+
+Samples never contain exactly the same amount of material, so intensities differ between runs for
+technical reasons. **Median normalization** shifts every sample so that its median is the same.
+
+It assumes that **most proteins do not change between the conditions**. In the benchmark this was
+false (a large share of the proteins were E. coli, all going up). In heart tissue it is a reasonable
+assumption: disease changes some proteins, not most of them. If it holds, the median log2 fold change
+over all proteins should be close to 0.
+
+**Does this still make sense with biological replicates?** Yes. Normalization corrects for
+*technical* differences between MS runs (how much material was loaded and how sensitive the instrument
+was that day), and every patient sample is a separate run. Whether the replicates are biological or
+technical makes no difference to that. Normalization only removes a **global shift of a whole
+sample**. The variation between patients in individual proteins stays in the data, and that variation
+is what the t-test needs. What matters is whether the assumption holds: if disease changes the
+*composition* of the tissue, a shift in the median can be real biology. Fibrosis, for example, adds a
+lot of extracellular-matrix protein, so every other protein makes up a smaller share. Median
+normalization would then remove a real effect. MaxQuant's LFQ values are already normalized across all
+75 runs, so the extra median step is a small correction. Treat it as a choice to check, not a
+requirement (A8 and A9 show how much it changes the results).
+
+```{r normalize, fig.height = 4.5}
+log2fc <- function(M) rowMeans(M[, case_cols], na.rm = TRUE) - rowMeans(M[, ctrl_cols], na.rm = TRUE)
+
+report <- function(M, label) {
+  cat(sprintf("%-34s median log2FC (all proteins) %+.3f\n", label, median(log2fc(M))))
+}
+
+# Median normalization: subtract each sample's median, then add back the average median
+med   <- apply(X, 2, median, na.rm = TRUE)
+X_med <- sweep(X, 2, med) + mean(med)
+
+report(X,     "as delivered (MaxLFQ-normalized)")
+report(X_med, "median-normalized")
+
+par(mfrow = c(1, 2), mar = c(6, 4, 3, 1))
+for (v in list(list(X, "as delivered"), list(X_med, "median-normalized"))) {
+  boxplot(v[[1]], names = short, las = 2, cex.axis = 0.6, outline = FALSE,
+          col = grp_col, main = v[[2]], ylab = "log2 intensity")
+}
+legend("bottomright", fill = c("#1F77B4", "#D62728"), legend = c("control", "case"), cex = 0.8, bty = "n")
+```
+
+**Question 2.1** Do the sample medians already line up before normalization? (MaxQuant's LFQ algorithm
+normalizes by itself.) Is the median log2 fold change near 0 in both versions?
+
+**Question 2.2** Can you think of a reason why the assumption could still be violated in diseased heart
+tissue? (Think of fibrosis: more extracellular matrix, relatively less of everything else.)
+
+For the rest of Part A we use the median-normalized data when `params$normalize` is `true`. Set it to
+`false` and re-knit to see what the choice costs.
+
+```{r choose}
+Xn <- if (isTRUE(params$normalize)) X_med else X
+```
+
+# A5 · Impute
+
+A t-test needs numbers. Since most missing values are *low* proteins, a common choice (from Perseus) is
+to fill them with random values from a narrow distribution near the detection limit: shifted down by
+1.8 standard deviations and 0.3 times as wide.
+
+```{r impute}
+impute_perseus <- function(M, shift = 1.8, width = 0.3, seed = 0) {
+  set.seed(seed)                                   # fixed seed, so the result is reproducible
+  for (j in seq_len(ncol(M))) {                    # one sample at a time
+    m <- mean(M[, j], na.rm = TRUE); s <- sd(M[, j], na.rm = TRUE)
+    miss <- is.na(M[, j])
+    M[miss, j] <- rnorm(sum(miss), m - shift * s, width * s)
+  }
+  M
+}
+Xi <- impute_perseus(Xn)
+
+j <- 1
+par(mfrow = c(1, 1), mar = c(5, 4, 3, 1))
+h_meas <- hist(Xn[, j], breaks = 60, plot = FALSE)
+hist(Xn[, j], breaks = h_meas$breaks, col = adjustcolor("#1F77B4", 0.6), border = "white",
+     xlab = "log2 intensity", main = paste("Imputed values sit at the low end (", short[j], ")"))
+if (any(is.na(Xn[, j])))
+  hist(Xi[is.na(Xn[, j]), j], breaks = 20, col = adjustcolor("#FF7F0E", 0.8), border = "white", add = TRUE)
+legend("topright", fill = c(adjustcolor("#1F77B4", 0.6), "#FF7F0E"), legend = c("measured", "imputed"), bty = "n")
+```
+
+# A6 · Do the samples look right?
+
+Before testing, check whether patients of the same group resemble each other more than the other
+group. A PCA places each sample on the two axes along which the samples differ most.
+
+```{r pca, fig.height = 5.5}
+Z  <- Xi - rowMeans(Xi)                          # centre each protein on its own mean
+sv <- svd(Z)                                     # singular value decomposition = PCA
+pc <- sv$v[, 1:2] %*% diag(sv$d[1:2])            # sample coordinates on PC1 and PC2
+explained <- sv$d^2 / sum(sv$d^2)                # share of the variation each PC explains
+
+layout(matrix(1:2, 1), widths = c(1, 1.15))
+par(mar = c(5, 4, 3, 1))
+plot(pc, pch = 19, cex = 1.4, col = grp_col,
+     xlab = sprintf("PC1 (%.0f%%)", 100 * explained[1]),
+     ylab = sprintf("PC2 (%.0f%%)", 100 * explained[2]), main = "PCA of the samples")
+text(pc, labels = short, pos = 3, cex = 0.6)
+legend("topright", col = c("#1F77B4", "#D62728"), pch = 19, legend = c("control", "case"), bty = "n")
+
+C <- cor(Xi)
+par(mar = c(6, 6, 3, 4))
+image(1:ncol(C), 1:ncol(C), C, col = hcl.colors(50, "viridis"), axes = FALSE,
+      xlab = "", ylab = "", main = "Sample correlation")
+axis(1, at = 1:ncol(C), labels = short, las = 2, cex.axis = 0.5)
+axis(2, at = 1:ncol(C), labels = short, las = 2, cex.axis = 0.5)
+abline(h = length(ctrl_cols) + 0.5, v = length(ctrl_cols) + 0.5, col = "white", lwd = 2)
+```
+
+Unlike the benchmark (6 tightly controlled samples), these are different people. Expect the groups to
+overlap: biological variation between patients is large, which is exactly why we need many replicates.
+
+# A7 · Test every protein
+
+A two-sample Welch t-test per protein (no equal-variance assumption), then the Benjamini–Hochberg
+correction, because we run one test per protein.
+
+```{r ttest}
+welch_p <- function(M) {
+  apply(M, 1, function(r) tryCatch(
+    t.test(r[case_cols], r[ctrl_cols], var.equal = FALSE)$p.value,   # NAs are dropped by t.test
+    error = function(e) NA_real_))
+}
+
+run_test <- function(M) {
+  res <- data.frame(gene    = sub(";.*", "", ifelse(is.na(d$`Gene names`), "", d$`Gene names`)),
+                    protein = d$`Majority protein IDs`,
+                    log2FC  = log2fc(M),
+                    p       = welch_p(M))
+  res$q <- p.adjust(res$p, method = "BH")                    # Benjamini-Hochberg adjusted p-values
+  res$significant <- !is.na(res$q) & res$q < 0.05
+  res
+}
+
+res <- run_test(Xi)
+```
+
+```{r volcano, fig.width = 8, fig.height = 6}
+dir_col <- ifelse(res$significant & res$log2FC > 0, "#D62728",
+           ifelse(res$significant & res$log2FC < 0, "#1F77B4", "grey75"))
+par(mfrow = c(1, 1), mar = c(5, 4, 3, 1))
+plot(res$log2FC, -log10(res$p), pch = 19, cex = 0.5, col = adjustcolor(dir_col, 0.6),
+     xlab = sprintf("log2 fold change (%s / control)", params$case), ylab = "-log10 p",
+     main = sprintf("Volcano plot — %s, %s", params$case, params$sex))
+abline(v = 0, col = "grey40", lwd = 0.8)
+
+# Label the strongest significant changes: far out on both axes
+sig  <- res[res$significant & res$gene != "", ]
+top  <- head(sig[order(-(-log10(sig$p) * abs(sig$log2FC))), ], 15)
+text(top$log2FC, -log10(top$p), top$gene, pos = 3, cex = 0.6)
+legend("topleft", pch = 19, col = c("#D62728", "#1F77B4", "grey75"), bty = "n",
+       legend = c(sprintf("up (%d)", sum(dir_col == "#D62728")),
+                  sprintf("down (%d)", sum(dir_col == "#1F77B4")), "not significant"))
+```
+
+# A8 · What did we find?
+
+Here there is no ground truth, so we cannot count false positives. What we *can* do is look at how
+many proteins we call, how much that depends on a fold-change cutoff, and how much it depends on the
+analysis choices from A4 and A5.
+
+```{r score}
+score <- function(res, fc_cut = 0) {
+  s <- res$significant & abs(res$log2FC) >= fc_cut
+  data.frame(fold_change_cutoff = fc_cut, tested = sum(!is.na(res$p)),
+             significant = sum(s), up = sum(s & res$log2FC > 0), down = sum(s & res$log2FC < 0))
+}
+do.call(rbind, lapply(c(0, 0.5, 1), function(c) score(res, c)))
+```
+
+The most significant proteins:
+
+```{r top}
+out <- res[order(res$q), ]
+out$log2FC <- round(out$log2FC, 2)
+head(out[, c("gene", "protein", "log2FC", "p", "q")], 25)
+```
+
+**How much do the choices matter?** The same test, run on four versions of the data:
+
+```{r sensitivity}
+choices <- list(
+  "as delivered + imputed"      = impute_perseus(X),
+  "median-norm. + imputed"      = impute_perseus(X_med),
+  "as delivered, no imputation" = X,
+  "median-norm., no imputation" = X_med
+)
+sens <- do.call(rbind, lapply(names(choices), function(n) {
+  r <- run_test(choices[[n]])
+  cbind(analysis = n, score(r, 0), significant_at_FC_0.5 = score(r, 0.5)$significant)
+}))
+sens
+```
+
+**Question 2.3** How many proteins change at q < 0.05? How many survive a fold-change cutoff of
+0.5 (≈1.4-fold) or 1 (2-fold)? Are the top hits biologically plausible for a heart under pressure
+overload (aortic stenosis) or volume overload (mitral regurgitation)?
+
+**Question 2.4** How much does the number of significant proteins change between the four versions in
+the sensitivity table? Imputation adds many low, nearly identical values to one group when a protein is
+missing mostly in the other: does imputation give you more or fewer hits, and do you trust those extra
+hits?
+
+```{r save}
+outfile <- sprintf("PartA_results_%s_vs_%s_%s.csv", gsub("[^A-Za-z]+", "_", params$case),
+                   gsub("[^A-Za-z]+", "_", sub(" \\(.*", "", params$control)), params$sex)
+write.csv(out, outfile, row.names = FALSE)
+cat("results written to", outfile, "\n")
+```
+
+# A9 · All comparisons
+
+Now the same pipeline (A1 filter → A2 log → A3 two-thirds valid values per group → A4 median
+normalization → A5 imputation → A7 Welch t-test + BH) for every pair of groups, separately for women
+and men:
+
+| Comparison | Question |
+|---|---|
+| aortic stenosis vs control | what changes under pressure overload? |
+| mitral regurgitation vs control | what changes under volume overload? |
+| aortic stenosis vs mitral regurgitation | what differs between the two diseases? |
+
+The filtering is done separately for each comparison, so each one tests the proteins measured well in
+*its* two groups.
+
+```{r all-comparisons}
+analyse <- function(case, control, sex, label, normalize = isTRUE(params$normalize)) {
+  cc <- samples$column[samples$group == control & samples$sex == sex]
+  ca <- samples$column[samples$group == case    & samples$sex == sex]
+  dd <- pg[keep, ]                                              # A1: filtered protein table
+  M  <- as.matrix(dd[, c(cc, ca)]); M[M == 0] <- NA; M <- log2(M)   # A2
+  v  <- rowSums(!is.na(M[, cc])) >= ceiling(round(params$min_valid * length(cc), 6)) &
+        rowSums(!is.na(M[, ca])) >= ceiling(round(params$min_valid * length(ca), 6))
+  M  <- M[v, ]; dd <- dd[v, ]                                   # A3
+  if (normalize) {                                              # A4
+    med <- apply(M, 2, median, na.rm = TRUE)
+    M   <- sweep(M, 2, med) + mean(med)
+  }
+  Mi <- impute_perseus(M)                                       # A5
+  p  <- apply(Mi, 1, function(r) tryCatch(                      # A7
+          t.test(r[ca], r[cc], var.equal = FALSE)$p.value, error = function(e) NA_real_))
+  data.frame(comparison = label, sex = sex, n_case = length(ca), n_control = length(cc),
+             gene    = sub(";.*", "", ifelse(is.na(dd$`Gene names`), "", dd$`Gene names`)),
+             protein = dd$`Majority protein IDs`,
+             log2FC  = rowMeans(Mi[, ca]) - rowMeans(Mi[, cc]),
+             p = p, q = p.adjust(p, method = "BH"))
+}
+
+comparisons <- data.frame(
+  case    = c("aortic stenosis", "mitral regurgitation", "aortic stenosis"),
+  control = c(params$control,    params$control,         "mitral regurgitation"),
+  label   = c("AS vs control",   "MR vs control",        "AS vs MR"))
+
+all_res <- list()
+for (sx in c("female", "male")) for (i in seq_len(nrow(comparisons))) {
+  key <- paste(comparisons$label[i], sx, sep = " | ")
+  all_res[[key]] <- analyse(comparisons$case[i], comparisons$control[i], sx, comparisons$label[i])
+}
+
+summary_tab <- do.call(rbind, lapply(all_res, function(r) {
+  s <- !is.na(r$q) & r$q < 0.05
+  data.frame(comparison = r$comparison[1], sex = r$sex[1],
+             n_case = r$n_case[1], n_control = r$n_control[1], tested = nrow(r),
+             significant = sum(s), up = sum(s & r$log2FC > 0), down = sum(s & r$log2FC < 0),
+             significant_2fold = sum(s & abs(r$log2FC) >= 1))
+}))
+rownames(summary_tab) <- NULL
+summary_tab
+```
+
+Up/down always means **higher/lower in the first group named** (e.g. "AS vs MR, up" = higher in
+aortic stenosis than in mitral regurgitation).
+
+```{r all-volcanoes, fig.width = 12, fig.height = 8}
+par(mfrow = c(2, 3), mar = c(4.5, 4, 3, 1))
+for (key in names(all_res)) {
+  r   <- all_res[[key]]
+  sig <- !is.na(r$q) & r$q < 0.05
+  col <- ifelse(sig & r$log2FC > 0, "#D62728", ifelse(sig & r$log2FC < 0, "#1F77B4", "grey75"))
+  plot(r$log2FC, -log10(r$p), pch = 19, cex = 0.4, col = adjustcolor(col, 0.6),
+       xlab = "log2 fold change", ylab = "-log10 p",
+       main = sprintf("%s (n = %d vs %d)", key, r$n_case[1], r$n_control[1]))
+  abline(v = 0, col = "grey40", lwd = 0.8)
+  top <- head(r[sig & r$gene != "", ][order(-(-log10(r$p[sig & r$gene != ""]) *
+                                              abs(r$log2FC[sig & r$gene != ""]))), ], 8)
+  text(top$log2FC, -log10(top$p), top$gene, pos = 3, cex = 0.55)
+  legend("topleft", bty = "n", cex = 0.8, pch = 19, col = c("#D62728", "#1F77B4"),
+         legend = c(sprintf("up (%d)", sum(col == "#D62728")), sprintf("down (%d)", sum(col == "#1F77B4"))))
+}
+```
+
+**Do women and men agree?** For each comparison, how many proteins are significant in both sexes,
+and do they change in the same direction?
+
+```{r sex-overlap}
+overlap <- do.call(rbind, lapply(comparisons$label, function(lab) {
+  f <- all_res[[paste(lab, "female", sep = " | ")]]
+  m <- all_res[[paste(lab, "male",   sep = " | ")]]
+  b <- merge(f[, c("protein", "gene", "log2FC", "q")], m[, c("protein", "log2FC", "q")],
+             by = "protein", suffixes = c("_F", "_M"))
+  sf <- b$q_F < 0.05; sm <- b$q_M < 0.05
+  data.frame(comparison = lab, tested_in_both = nrow(b),
+             sig_female = sum(f$q < 0.05, na.rm = TRUE), sig_male = sum(m$q < 0.05, na.rm = TRUE),
+             sig_in_both = sum(sf & sm, na.rm = TRUE),
+             same_direction = sum(sf & sm & sign(b$log2FC_F) == sign(b$log2FC_M), na.rm = TRUE),
+             cor_log2FC = round(cor(b$log2FC_F, b$log2FC_M), 2))
+}))
+overlap
+```
+
+The most consistent changes (significant in both sexes, same direction) per comparison:
+
+```{r consistent}
+consistent <- do.call(rbind, lapply(comparisons$label, function(lab) {
+  f <- all_res[[paste(lab, "female", sep = " | ")]]
+  m <- all_res[[paste(lab, "male",   sep = " | ")]]
+  b <- merge(f[, c("protein", "gene", "log2FC", "q")], m[, c("protein", "log2FC", "q")],
+             by = "protein", suffixes = c("_F", "_M"))
+  b <- b[b$q_F < 0.05 & b$q_M < 0.05 & sign(b$log2FC_F) == sign(b$log2FC_M), ]
+  b <- b[order(-abs(b$log2FC_F + b$log2FC_M)), ]
+  if (nrow(b) == 0) return(NULL)
+  cbind(comparison = lab, head(b[, c("gene", "log2FC_F", "log2FC_M", "q_F", "q_M")], 10))
+}))
+consistent$log2FC_F <- round(consistent$log2FC_F, 2); consistent$log2FC_M <- round(consistent$log2FC_M, 2)
+rownames(consistent) <- NULL
+consistent
+```
+
+```{r save-all}
+all_out <- do.call(rbind, all_res); rownames(all_out) <- NULL
+write.csv(all_out, "PartA_results_all_comparisons.csv", row.names = FALSE)
+cat("all results written to PartA_results_all_comparisons.csv\n")
+```
+
+**Question 2.5** Which comparison gives the most significant proteins? Look at the group sizes: there
+are only 5 women with mitral regurgitation, and power depends on the smaller group. Are fewer hits
+evidence that fewer proteins change?
+
+**Question 2.6** How well do women and men agree (`cor_log2FC`, `same_direction`)? Are the
+disagreements more likely to be real sex differences, or a lack of power in one sex?
+
+**Question 2.7** Proteins that differ between aortic stenosis and mitral regurgitation are candidates
+for the different responses to pressure vs volume overload. Are they mostly proteins that also changed
+against the controls, in only one of the two diseases?
+
+**Question 2.8** Set `normalize: false` and re-knit. Which comparisons change the most? Do the
+comparisons with the largest extracellular-matrix changes also show the largest median shift in A4?
+
+---
+
+```{r session}
+sessionInfo()
+```
