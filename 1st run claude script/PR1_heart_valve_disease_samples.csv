@@ -1,0 +1,76 @@
+column,sample,group,sex
+LFQ intensity AS_01_M,AS_01_M,aortic stenosis,male
+LFQ intensity AS_02_M,AS_02_M,aortic stenosis,male
+LFQ intensity AS_03_F,AS_03_F,aortic stenosis,female
+LFQ intensity AS_04_F,AS_04_F,aortic stenosis,female
+LFQ intensity AS_05_F,AS_05_F,aortic stenosis,female
+LFQ intensity AS_06_F,AS_06_F,aortic stenosis,female
+LFQ intensity AS_07_F,AS_07_F,aortic stenosis,female
+LFQ intensity CON_01_M,CON_01_M,control (donor heart),male
+LFQ intensity CON_02_M,CON_02_M,control (donor heart),male
+LFQ intensity CON_03_M,CON_03_M,control (donor heart),male
+LFQ intensity CON_04_M,CON_04_M,control (donor heart),male
+LFQ intensity CON_05_M,CON_05_M,control (donor heart),male
+LFQ intensity CON_06_M,CON_06_M,control (donor heart),male
+LFQ intensity CON_07_F,CON_07_F,control (donor heart),female
+LFQ intensity CON_08_F,CON_08_F,control (donor heart),female
+LFQ intensity CON_09_F,CON_09_F,control (donor heart),female
+LFQ intensity CON_10_F,CON_10_F,control (donor heart),female
+LFQ intensity CON_11_F,CON_11_F,control (donor heart),female
+LFQ intensity CON_12_F,CON_12_F,control (donor heart),female
+LFQ intensity CON_13_F,CON_13_F,control (donor heart),female
+LFQ intensity CON_14_M,CON_14_M,control (donor heart),male
+LFQ intensity CON_15_M,CON_15_M,control (donor heart),male
+LFQ intensity CON_16_M,CON_16_M,control (donor heart),male
+LFQ intensity CON_17_F,CON_17_F,control (donor heart),female
+LFQ intensity MR_01_F,MR_01_F,mitral regurgitation,female
+LFQ intensity MR_02_M,MR_02_M,mitral regurgitation,male
+LFQ intensity MR_03_M,MR_03_M,mitral regurgitation,male
+LFQ intensity MR_04_M,MR_04_M,mitral regurgitation,male
+LFQ intensity MR_05_M,MR_05_M,mitral regurgitation,male
+LFQ intensity MR_06_M,MR_06_M,mitral regurgitation,male
+LFQ intensity MR_07_M,MR_07_M,mitral regurgitation,male
+LFQ intensity MR_08_F,MR_08_F,mitral regurgitation,female
+LFQ intensity MR_09_M,MR_09_M,mitral regurgitation,male
+LFQ intensity MR_10_F,MR_10_F,mitral regurgitation,female
+LFQ intensity MR_11_M,MR_11_M,mitral regurgitation,male
+LFQ intensity MR_12_M,MR_12_M,mitral regurgitation,male
+LFQ intensity MR_13_M,MR_13_M,mitral regurgitation,male
+LFQ intensity MR_14_M,MR_14_M,mitral regurgitation,male
+LFQ intensity MR_15_F,MR_15_F,mitral regurgitation,female
+LFQ intensity MR_16_F,MR_16_F,mitral regurgitation,female
+LFQ intensity MR_17_M,MR_17_M,mitral regurgitation,male
+LFQ intensity AS_08_M,AS_08_M,aortic stenosis,male
+LFQ intensity AS_09_F,AS_09_F,aortic stenosis,female
+LFQ intensity AS_10_F,AS_10_F,aortic stenosis,female
+LFQ intensity AS_11_F,AS_11_F,aortic stenosis,female
+LFQ intensity AS_12_F,AS_12_F,aortic stenosis,female
+LFQ intensity AS_13_F,AS_13_F,aortic stenosis,female
+LFQ intensity AS_14_F,AS_14_F,aortic stenosis,female
+LFQ intensity AS_15_M,AS_15_M,aortic stenosis,male
+LFQ intensity AS_16_M,AS_16_M,aortic stenosis,male
+LFQ intensity AS_17_M,AS_17_M,aortic stenosis,male
+LFQ intensity AS_18_M,AS_18_M,aortic stenosis,male
+LFQ intensity AS_19_M,AS_19_M,aortic stenosis,male
+LFQ intensity AS_20_F,AS_20_F,aortic stenosis,female
+LFQ intensity AS_21_F,AS_21_F,aortic stenosis,female
+LFQ intensity AS_22_F,AS_22_F,aortic stenosis,female
+LFQ intensity AS_23_F,AS_23_F,aortic stenosis,female
+LFQ intensity AS_24_F,AS_24_F,aortic stenosis,female
+LFQ intensity AS_25_M,AS_25_M,aortic stenosis,male
+LFQ intensity AS_26_M,AS_26_M,aortic stenosis,male
+LFQ intensity AS_27_M,AS_27_M,aortic stenosis,male
+LFQ intensity AS_28_F,AS_28_F,aortic stenosis,female
+LFQ intensity AS_29_M,AS_29_M,aortic stenosis,male
+LFQ intensity AS_30_M,AS_30_M,aortic stenosis,male
+LFQ intensity AS_31_M,AS_31_M,aortic stenosis,male
+LFQ intensity AS_32_M,AS_32_M,aortic stenosis,male
+LFQ intensity AS_33_M,AS_33_M,aortic stenosis,male
+LFQ intensity AS_34_F,AS_34_F,aortic stenosis,female
+LFQ intensity AS_35_M,AS_35_M,aortic stenosis,male
+LFQ intensity AS_36_F,AS_36_F,aortic stenosis,female
+LFQ intensity AS_37_F,AS_37_F,aortic stenosis,female
+LFQ intensity AS_38_F,AS_38_F,aortic stenosis,female
+LFQ intensity AS_39_M,AS_39_M,aortic stenosis,male
+LFQ intensity AS_40_M,AS_40_M,aortic stenosis,male
+LFQ intensity AS_41_M,AS_41_M,aortic stenosis,male
