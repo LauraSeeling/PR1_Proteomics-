@@ -1,0 +1,72 @@
+gene_symbol,enrichment_terms,retained_after_manual_curation,manual_exclusion_reason,found_in_peptide_filtered_annotation
+AIMP1,Translation; protein biosynthetic process; translation,True,,True
+C1QBP,protein biosynthetic process; translation,True,,True
+CARS2,Translation; protein biosynthetic process; translation,True,,True
+CYFIP1,protein biosynthetic process; translation,True,,True
+DDRGK1,protein biosynthetic process; translation,True,,True
+EEF1B2,Translation; protein biosynthetic process; translation,True,,True
+EIF3A,Translation; protein biosynthetic process; translation,True,,True
+EIF3F,Translation; protein biosynthetic process; translation,True,,True
+EIF3M,Translation; protein biosynthetic process; translation,True,,True
+EIF4A1,Translation; protein biosynthetic process; translation,True,,True
+EIF5B,Translation; protein biosynthetic process; translation,True,,True
+FARS2,Translation; protein biosynthetic process; translation,True,,True
+GADD45GIP1,Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+GCN1,protein biosynthetic process; ribosome; translation,True,,True
+GFM1,Translation; protein biosynthetic process; translation,True,,True
+GSPT1,Translation; protein biosynthetic process; ribosome; translation,True,,True
+LARS2,Translation; protein biosynthetic process; translation,True,,True
+MRPL10,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL13,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL15,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL17,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL19,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL28,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL38,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL44,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL46,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL47,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPL9,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPS18C,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPS21,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPS23,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPS5,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MRPS9,Ribosome; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+MTIF3,Translation; protein biosynthetic process; translation,True,,True
+OGT,protein biosynthetic process; translation,True,,True
+PABPC1,Translation; protein biosynthetic process; translation,True,,True
+PPP1CA,protein biosynthetic process; translation,True,,True
+PRKDC,protein biosynthetic process; translation,True,,True
+RPL15,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL18A,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL21,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL23,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL24,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL27,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL27A,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL37A,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL3L,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPL9,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPLP1,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS10-NUDT3,Ribosome; ribosome,True,,True
+RPS13,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS15,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS15A,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS16,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS17,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS21,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS24,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS25,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS27,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+RPS8,Ribosome; SRP-dependent cotranslational protein targeting to membrane; Translation; protein biosynthetic process; ribosomal subunit; ribosome; translation,True,,True
+SARS2,Translation; protein biosynthetic process; translation,True,,True
+SEC11A,SRP-dependent cotranslational protein targeting to membrane; Translation,True,,True
+SEC61G,SRP-dependent cotranslational protein targeting to membrane; Translation,True,,True
+SHMT2,protein biosynthetic process; translation,True,,True
+SPCS1,SRP-dependent cotranslational protein targeting to membrane; Translation,True,,True
+SRP54,SRP-dependent cotranslational protein targeting to membrane; Translation,True,,True
+SRPRA,SRP-dependent cotranslational protein targeting to membrane; Translation,True,,True
+TACO1,protein biosynthetic process; translation,True,,True
+TARS2,Translation; protein biosynthetic process; translation,True,,True
+TRMT10C,protein biosynthetic process; translation,True,,True
+UFL1,protein biosynthetic process; translation,True,,True

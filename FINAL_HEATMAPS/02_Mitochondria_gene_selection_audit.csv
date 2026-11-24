@@ -1,0 +1,155 @@
+gene_symbol,enrichment_terms,retained_after_manual_curation,manual_exclusion_reason,found_in_peptide_filtered_annotation
+AASS,mitochondrial matrix; mitochondrion,True,,True
+ABCD3,mitochondrion,True,,True
+ABHD11,mitochondrial matrix; mitochondrion,True,,True
+ABHD5,mitochondrion,True,,True
+ACAT1,mitochondrial matrix; mitochondrion,True,,True
+ACOT13,mitochondrial matrix; mitochondrion,True,,True
+ACOT2,mitochondrial matrix; mitochondrion,True,,True
+ACSF3,mitochondrial matrix; mitochondrion,True,,True
+ACSL3,mitochondrion,True,,True
+ACSS1,mitochondrial matrix; mitochondrion,True,,True
+ACSS3,mitochondrial matrix; mitochondrion,True,,True
+ADHFE1,mitochondrial matrix; mitochondrion,True,,True
+AFG1L,mitochondrion,True,,True
+AKAP1,mitochondrion,True,,True
+ALDH1L1,mitochondrion,True,,True
+ATP5F1B,mitochondrial matrix; mitochondrion,True,,True
+ATP5MF-PTCD1,mitochondrion,True,,True
+BCAT2,mitochondrial matrix; mitochondrion,True,,True
+BCKDHA,mitochondrial matrix; mitochondrion,True,,True
+BCKDHB,mitochondrial matrix; mitochondrion,True,,True
+BCKDK,mitochondrial matrix; mitochondrion,True,,True
+BCO2,mitochondrial matrix; mitochondrion,True,,True
+BDH1,mitochondrial matrix; mitochondrion,True,,True
+BID,mitochondrion,True,,True
+BPHL,mitochondrion,True,,True
+C1QBP,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+C8ORF82,mitochondrion,True,,True
+CARS2,mitochondrion,True,,True
+CCAR2,mitochondrial matrix; mitochondrion,True,,True
+CHDH,mitochondrion,True,,True
+CLPB,mitochondrion,True,,True
+CMC1,mitochondrial matrix; mitochondrion,True,,True
+COMTD1,mitochondrion,True,,True
+COX6A1,mitochondrion,True,,True
+COX7A1,mitochondrion,True,,True
+CUTA,mitochondrion,True,,True
+D2HGDH,mitochondrial matrix; mitochondrion,True,,True
+DCTPP1,mitochondrion,True,,True
+DCXR,mitochondrion,True,,True
+DGLUCY,mitochondrial matrix; mitochondrion,True,,True
+DHTKD1,mitochondrial matrix; mitochondrion,True,,True
+DNAJA1,mitochondrion,True,,True
+ECHDC2,mitochondrion,True,,True
+ECHDC3,mitochondrion,True,,True
+ECSIT,mitochondrion,True,,True
+ETFRF1,mitochondrion,True,,True
+EXOG,mitochondrion,True,,True
+FAHD1,mitochondrial matrix; mitochondrion,True,,True
+FAHD2A,mitochondrion,True,,True
+FARS2,mitochondrial matrix; mitochondrion,True,,True
+GADD45GIP1,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+GCDH,mitochondrial matrix; mitochondrion,True,,True
+GFM1,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+GLS,mitochondrial matrix; mitochondrion,True,,True
+HADH,mitochondrial matrix; mitochondrion,True,,True
+HIBADH,mitochondrial matrix; mitochondrion,True,,True
+HIGD1A,mitochondrion,True,,True
+HK2,mitochondrion,True,,True
+HMGCL,mitochondrial matrix; mitochondrion,True,,True
+HUWE1,mitochondrion,True,,True
+HYOU1,mitochondrion,True,,True
+ISOC2,mitochondrion,True,,True
+L2HGDH,mitochondrion,True,,True
+LARS2,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+LYRM1,mitochondrion,True,,True
+MAPK14,mitochondrion,True,,True
+MAPT,mitochondrion,True,,True
+MCAT,mitochondrial matrix; mitochondrion,True,,True
+ME2,mitochondrial matrix; mitochondrion,True,,True
+ME3,mitochondrial matrix; mitochondrion,True,,True
+MFN1,mitochondrion,True,,True
+MMAA,mitochondrial matrix; mitochondrion,True,,True
+MPC1,mitochondrion,True,,True
+MPV17,mitochondrion,True,,True
+MRPL10,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL13,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL15,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL17,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL19,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL28,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL38,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL44,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL46,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL47,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPL9,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPS18C,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPS21,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPS23,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPS5,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MRPS9,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+MSRB2,mitochondrion,True,,True
+MT-ATP6,mitochondrion,True,,True
+MT-ND1,mitochondrion,True,,True
+MTCH1,mitochondrion,True,,True
+MTHFS,mitochondrial matrix; mitochondrion,True,,True
+MTIF3,mitochondrial gene expression; mitochondrion,True,,True
+NDUFA1,mitochondrion,True,,False
+NDUFA9,mitochondrial matrix; mitochondrion,True,,True
+NDUFAF1,mitochondrial matrix; mitochondrion,True,,True
+NDUFAF2,mitochondrion,True,,True
+NDUFB1,mitochondrion,True,,True
+NDUFB4,mitochondrion,True,,True
+NDUFB9,mitochondrion,True,,True
+NDUFS2,mitochondrial matrix; mitochondrion,True,,True
+NDUFS3,mitochondrial matrix; mitochondrion,True,,True
+NDUFS4,mitochondrion,True,,True
+NDUFS8,mitochondrial matrix; mitochondrion,True,,True
+NDUFV3,mitochondrion,True,,True
+NFU1,mitochondrial matrix; mitochondrion,True,,True
+NIPSNAP1,mitochondrial matrix; mitochondrion,True,,True
+NIPSNAP3A,mitochondrion,True,,True
+NIPSNAP3B,mitochondrion,True,,True
+NMNAT3,mitochondrial matrix; mitochondrion,True,,True
+NUDT8,mitochondrion,True,,True
+OGT,mitochondrion,True,,True
+PALLD,mitochondrion,True,,True
+PCCB,mitochondrial matrix; mitochondrion,True,,True
+PDK4,mitochondrial matrix; mitochondrion,True,,True
+PDPR,mitochondrial matrix; mitochondrion,True,,True
+PET100,mitochondrion,True,,True
+PLGRKT,mitochondrion,True,,True
+PLIN5,mitochondrion,True,,True
+PPOX,mitochondrion,True,,True
+PTRH2,mitochondrion,True,,True
+S100A1,mitochondrion,True,,True
+SARS2,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+SCCPDH,mitochondrion,True,,True
+SDHC,mitochondrion,True,,True
+SDR39U1,mitochondrion,True,,True
+SHMT2,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+SIRT3,mitochondrial matrix; mitochondrion,True,,True
+SLC25A11,mitochondrion,True,,True
+SLC25A42,mitochondrion,True,,True
+SLC25A46,mitochondrion,True,,True
+SNAP29,mitochondrion,True,,True
+SPG7,mitochondrion,True,,True
+SUCLG2,mitochondrial matrix; mitochondrion,True,,True
+TACO1,mitochondrial gene expression; mitochondrion,True,,True
+TARS2,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+TBRG4,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+TFAM,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+TFB2M,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+TIMM23,mitochondrion,True,,True
+TMEM126B,mitochondrion,True,,True
+TMEM223,mitochondrion,True,,True
+TMX2,mitochondrion,True,,True
+TOMM7,mitochondrion,True,,True
+TRMT10C,mitochondrial gene expression; mitochondrial matrix; mitochondrion,True,,True
+TTC19,mitochondrion,True,,True
+UFL1,mitochondrion,True,,True
+UQCC1,mitochondrion,True,,True
+UQCR11,mitochondrion,True,,False
+UQCRC2,mitochondrion,True,,True
+VWA8,mitochondrion,True,,True

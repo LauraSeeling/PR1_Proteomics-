@@ -1,0 +1,65 @@
+gene_symbol,enrichment_terms,retained_after_manual_curation,manual_exclusion_reason,found_in_peptide_filtered_annotation
+A2M,Degradation of the extracellular matrix; Extracellular matrix organization,True,,True
+ABI3BP,external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+ACTN1,Extracellular matrix organization,False,Cytoskeletal / adhesion protein; assigned to category 4,True
+AEBP1,collagen fibril organization; extracellular matrix organization,True,,True
+AHSG,external encapsulating structure; extracellular matrix,True,,True
+APOE,external encapsulating structure; extracellular matrix,True,,True
+ASPN,ECM proteoglycans; Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+BGN,ECM proteoglycans; Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+C1QC,collagen trimer,False,Complement; assigned to category 5,True
+CAV2,extracellular matrix organization,True,,True
+COL12A1,Collagen chain trimerization; Degradation of the extracellular matrix; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL14A1,Collagen chain trimerization; Degradation of the extracellular matrix; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL18A1,Collagen chain trimerization; Degradation of the extracellular matrix; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix,True,,True
+COL1A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL1A2,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL2A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL3A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL4A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL4A2,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL4A6,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL5A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL5A2,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL5A3,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL6A1,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL6A2,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix,True,,True
+COL6A3,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix,True,,True
+COL6A6,Collagen chain trimerization; Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+COL8A1,Collagen chain trimerization; Degradation of the extracellular matrix; Extracellular matrix organization; collagen trimer; external encapsulating structure; extracellular matrix,True,,True
+DCN,Degradation of the extracellular matrix; ECM proteoglycans; Extracellular matrix organization,True,,True
+DPT,collagen fibril organization; extracellular matrix organization,True,,True
+EFEMP1,Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+EFEMP2,Extracellular matrix organization; collagen fibril organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+ELN,Degradation of the extracellular matrix; Extracellular matrix organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+EMILIN1,Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+FBLN1,Extracellular matrix organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+FBLN2,Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+FBN1,Degradation of the extracellular matrix; Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+FGA,Extracellular matrix organization,False,Fibrinogen / coagulation; assigned to category 5,True
+FGB,Extracellular matrix organization,False,Fibrinogen / coagulation; assigned to category 5,True
+FGG,Extracellular matrix organization,False,Fibrinogen / coagulation; assigned to category 5,True
+FMOD,ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+HAPLN1,ECM proteoglycans; Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+IGFALS,external encapsulating structure; extracellular matrix,True,,True
+LTBP1,Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+LTBP2,Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+LUM,ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; collagen trimer; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+MATN2,external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+MFAP5,Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+MGP,external encapsulating structure; extracellular matrix,True,,True
+OGN,external encapsulating structure; extracellular matrix,True,,True
+PLEC,Extracellular matrix organization,False,Cytoskeletal linker; assigned to category 4,True
+PLG,Degradation of the extracellular matrix; Extracellular matrix organization; extracellular matrix organization,False,Fibrinolysis; assigned to category 5,True
+POSTN,external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+PRELP,external encapsulating structure; extracellular matrix,True,,True
+SERPINF1,external encapsulating structure; extracellular matrix,True,,True
+SERPINF2,collagen fibril organization; extracellular matrix organization,False,Fibrinolysis; assigned to category 5,True
+TGFBI,external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+TGM2,external encapsulating structure; extracellular matrix,True,,True
+THBS4,external encapsulating structure; extracellular matrix,True,,True
+TIMP3,external encapsulating structure; extracellular matrix,True,,True
+TNXB,ECM proteoglycans; Extracellular matrix organization; collagen fibril organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True
+TTR,Extracellular matrix organization,True,,True
+VCAN,ECM proteoglycans; Extracellular matrix organization; external encapsulating structure; extracellular matrix,True,,True
+VTN,ECM proteoglycans; Extracellular matrix organization; external encapsulating structure; extracellular matrix; extracellular matrix organization,True,,True

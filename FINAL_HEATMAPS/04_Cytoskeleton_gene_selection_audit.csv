@@ -1,0 +1,79 @@
+gene_symbol,enrichment_terms,retained_after_manual_curation,manual_exclusion_reason,found_in_peptide_filtered_annotation
+ABI3BP,cell adhesion,True,,True
+ACTN1,Integrin signaling; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+AMBP,cell adhesion,False,Plasma-associated protein; category 5,True
+APOA1,cell adhesion,False,Lipoprotein / plasma-associated; category 5,True
+APOA4,cell adhesion,False,Lipoprotein / plasma-associated; category 5,True
+AZGP1,cell adhesion,False,Plasma-associated protein; category 5,True
+BGN,Cytoskeleton in muscle cells,True,,True
+C3,Integrin signaling,False,Complement protein; category 5,True
+COL12A1,cell adhesion,True,,True
+COL14A1,cell adhesion,True,,True
+COL18A1,Integrin cell surface interactions; cell adhesion,True,,True
+COL1A1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+COL1A2,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions,True,,True
+COL2A1,Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions,True,,True
+COL3A1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+COL4A1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions,True,,True
+COL4A2,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions,True,,True
+COL4A6,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+COL5A1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+COL5A2,Cytoskeleton in muscle cells; Integrin cell surface interactions; Non-integrin membrane-ECM interactions,True,,True
+COL5A3,Cytoskeleton in muscle cells; Integrin cell surface interactions; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
+COL6A1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; cell adhesion,True,,True
+COL6A2,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; cell adhesion,True,,True
+COL6A3,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; cell adhesion,True,,True
+COL6A6,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; cell adhesion,True,,True
+COL8A1,Integrin cell surface interactions; cell adhesion,True,,True
+CSRP1,Cytoskeleton in muscle cells; cell adhesion,True,,True
+CTTN,cell adhesion,True,,True
+DCN,Cytoskeleton in muscle cells,True,,True
+DPT,cell adhesion,True,,True
+EFEMP2,cell adhesion,True,,True
+ELN,Cytoskeleton in muscle cells,True,,True
+EMILIN1,cell adhesion,True,,True
+FBLN1,Cytoskeleton in muscle cells; cell adhesion,True,,True
+FBLN2,Cytoskeleton in muscle cells; cell adhesion,True,,True
+FBN1,Cytoskeleton in muscle cells; Integrin cell surface interactions; Integrin signaling; cell adhesion,True,,True
+FGA,Integrin cell surface interactions; Integrin signaling; cell adhesion,False,Fibrinogen / coagulation; category 5,True
+FGB,Integrin cell surface interactions; Integrin signaling; cell adhesion,False,Fibrinogen / coagulation; category 5,True
+FGG,Integrin cell surface interactions; Integrin signaling; cell adhesion,False,Fibrinogen / coagulation; category 5,True
+FHL1,Cytoskeleton in muscle cells,True,,True
+FLNA,Integrin signaling; cell adhesion,True,,True
+HAPLN1,cell adhesion,True,,True
+HBB,cell adhesion,False,Blood-associated protein; category 5,True
+HRG,cell adhesion,False,Plasma / coagulation-associated protein; category 5,True
+IGFALS,cell adhesion,False,Circulating plasma protein; category 5,True
+KNG1,cell adhesion,False,Coagulation-associated protein; category 5,True
+LMNA,Cytoskeleton in muscle cells,True,,True
+LMO7,cell adhesion,True,,True
+LPP,cell adhesion,True,,True
+LUM,Integrin cell surface interactions,True,,True
+MFGE8,cell adhesion,True,,True
+MYH10,Cytoskeleton in muscle cells; cell adhesion,True,,True
+MYH13,Cytoskeleton in muscle cells,True,,True
+MYH2,Cytoskeleton in muscle cells,True,,True
+PDLIM3,Cytoskeleton in muscle cells,True,,True
+PLEC,Cytoskeleton in muscle cells,True,,True
+PLG,cell adhesion,False,Fibrinolysis; category 5,True
+POSTN,cell adhesion,True,,True
+RELA,cell adhesion,True,,True
+SERPINE2,cell adhesion,False,Coagulation / protease-inhibitor-associated; category 5,True
+SERPINF2,cell adhesion,False,Fibrinolysis; category 5,True
+SORBS1,cell adhesion,True,,True
+SORBS3,cell adhesion,True,,True
+SPTA1,cell adhesion,True,,True
+TGFBI,cell adhesion,True,,True
+TGM2,cell adhesion,True,,True
+THBS4,Cytoskeleton in muscle cells; Integrin signaling; cell adhesion,True,,True
+TNNI1,Cytoskeleton in muscle cells,True,,True
+TNNT2,Cytoskeleton in muscle cells,True,,True
+TNXB,Integrin signaling; cell adhesion,True,,True
+TPM1,Cytoskeleton in muscle cells; cell adhesion,True,,True
+TPM2,Cytoskeleton in muscle cells,True,,True
+TPM3,Cytoskeleton in muscle cells,True,,True
+TPM4,Cytoskeleton in muscle cells,True,,True
+TTN,Cytoskeleton in muscle cells,True,,True
+TTR,Non-integrin membrane-ECM interactions,False,Circulating transport protein; not a core cytoskeletal protein,True
+VCAN,Cytoskeleton in muscle cells; cell adhesion,True,,True
+VTN,Integrin cell surface interactions; Integrin signaling; Non-integrin membrane-ECM interactions; cell adhesion,True,,True
